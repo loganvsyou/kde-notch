@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/logan/kde-notch/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

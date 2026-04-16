@@ -1,0 +1,17 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "logantylermarsh@gmail.com",
+                "Name": "Logan Marsh"
+            }
+        ],
+        "Description": "A macOS-style notch overlay for the top of the screen",
+        "Id": "com.logan.notch",
+        "License": "GPL-2.0-or-later",
+        "Name": "Notch",
+        "Version": "1.0.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
