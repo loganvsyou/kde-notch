@@ -1,3 +1,0 @@
-/home/logan/kde-notch/build/CMakeFiles/kde-notch.dir
-/home/logan/kde-notch/build/CMakeFiles/edit_cache.dir
-/home/logan/kde-notch/build/CMakeFiles/rebuild_cache.dir
