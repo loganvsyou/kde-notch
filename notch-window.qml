@@ -12,7 +12,7 @@ Window {
 
     readonly property int notchWidth:    220
     readonly property int collapsedHeight: 32
-    readonly property int expandedHeight:  96
+    readonly property int expandedHeight:  130
     readonly property int cornerRadius:   10
 
     screen: targetScreen
@@ -99,82 +99,105 @@ Window {
     Item {
         id: mediaPanel
         anchors.horizontalCenter: canvas.horizontalCenter
+        anchors.top: canvas.top
+        anchors.topMargin: win.collapsedHeight + 6
         anchors.bottom: canvas.bottom
-        anchors.bottomMargin: 10
-        width: win.notchWidth - 20
-        height: win.expandedHeight - win.collapsedHeight - 10
+        anchors.bottomMargin: 8
+        width: win.notchWidth - 16
 
         opacity: Math.max(0, (win.height - win.collapsedHeight) /
                               (win.expandedHeight - win.collapsedHeight) * 2 - 1)
         visible: opacity > 0
 
-        ColumnLayout {
+        RowLayout {
             anchors.fill: parent
-            spacing: 4
+            spacing: 8
 
-            // Track title
-            Text {
-                Layout.fillWidth: true
-                text: mpris.hasPlayer ? (mpris.title || "Unknown track") : "Nothing playing"
-                color: "white"
-                font.pixelSize: 11
-                font.family: "Helvetica"
-                horizontalAlignment: Text.AlignHCenter
-                elide: Text.ElideRight
+            // ── Album art ──────────────────────────────────────────────────
+            Rectangle {
+                width: 62; height: 62
+                radius: 6
+                color: "#1c1c1e"
+                clip: true
+                Layout.alignment: Qt.AlignVCenter
+
+                Image {
+                    anchors.fill: parent
+                    source: mpris.artUrl
+                    fillMode: Image.PreserveAspectCrop
+                    smooth: true
+                    asynchronous: true
+                }
             }
 
-            // Artist
-            Text {
+            // ── Track info + controls ──────────────────────────────────────
+            ColumnLayout {
                 Layout.fillWidth: true
-                visible: mpris.hasPlayer && mpris.artist !== ""
-                text: mpris.artist
-                color: "#888888"
-                font.pixelSize: 10
-                font.family: "Helvetica"
-                horizontalAlignment: Text.AlignHCenter
-                elide: Text.ElideRight
-            }
+                Layout.fillHeight: true
+                spacing: 2
 
-            // Prev / Play-Pause / Next
-            RowLayout {
-                Layout.alignment: Qt.AlignHCenter
-                spacing: 20
+                Item { Layout.fillHeight: true }
 
                 Text {
-                    text: "⏮"
-                    color: mpris.hasPlayer ? "white" : "#444"
-                    font.pixelSize: 16
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: mpris.hasPlayer
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: mpris.previous()
-                    }
+                    Layout.fillWidth: true
+                    text: mpris.hasPlayer ? (mpris.title || "Unknown track") : "Nothing playing"
+                    color: "white"
+                    font.pixelSize: 13
+                    font.family: "Helvetica"
+                    elide: Text.ElideRight
                 }
 
                 Text {
-                    text: mpris.playing ? "⏸" : "▶"
-                    color: mpris.hasPlayer ? "white" : "#444"
-                    font.pixelSize: 16
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: mpris.hasPlayer
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: mpris.playPause()
+                    Layout.fillWidth: true
+                    visible: mpris.hasPlayer && mpris.artist !== ""
+                    text: mpris.artist
+                    color: "#888888"
+                    font.pixelSize: 12
+                    font.family: "Helvetica"
+                    elide: Text.ElideRight
+                }
+
+                Item { Layout.fillHeight: true }
+
+                RowLayout {
+                    spacing: 20
+
+                    Text {
+                        text: "⏮"
+                        color: mpris.hasPlayer ? "white" : "#444"
+                        font.pixelSize: 22
+                        MouseArea {
+                            anchors.fill: parent
+                            enabled: mpris.hasPlayer
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: mpris.previous()
+                        }
+                    }
+                    Text {
+                        text: mpris.playing ? "⏸" : "▶"
+                        color: mpris.hasPlayer ? "white" : "#444"
+                        font.pixelSize: 22
+                        MouseArea {
+                            anchors.fill: parent
+                            enabled: mpris.hasPlayer
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: mpris.playPause()
+                        }
+                    }
+                    Text {
+                        text: "⏭"
+                        color: mpris.hasPlayer ? "white" : "#444"
+                        font.pixelSize: 22
+                        MouseArea {
+                            anchors.fill: parent
+                            enabled: mpris.hasPlayer
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: mpris.next()
+                        }
                     }
                 }
 
-                Text {
-                    text: "⏭"
-                    color: mpris.hasPlayer ? "white" : "#444"
-                    font.pixelSize: 16
-                    MouseArea {
-                        anchors.fill: parent
-                        enabled: mpris.hasPlayer
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: mpris.next()
-                    }
-                }
+                Item { Layout.fillHeight: true }
             }
         }
     }

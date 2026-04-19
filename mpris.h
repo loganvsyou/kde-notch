@@ -14,6 +14,7 @@ class MprisController : public QObject
     Q_OBJECT
     Q_PROPERTY(QString title    READ title    NOTIFY metadataChanged)
     Q_PROPERTY(QString artist   READ artist   NOTIFY metadataChanged)
+    Q_PROPERTY(QString artUrl   READ artUrl   NOTIFY metadataChanged)
     Q_PROPERTY(bool    playing  READ playing  NOTIFY playbackStatusChanged)
     Q_PROPERTY(bool    hasPlayer READ hasPlayer NOTIFY hasPlayerChanged)
 
@@ -29,6 +30,7 @@ public:
 
     QString title()     const { return m_title; }
     QString artist()    const { return m_artist; }
+    QString artUrl()    const { return m_artUrl; }
     bool    playing()   const { return m_playing; }
     bool    hasPlayer() const { return !m_service.isEmpty(); }
 
@@ -71,8 +73,9 @@ private:
             QString t = map.value("xesam:title").toString();
             QStringList al = map.value("xesam:artist").toStringList();
             QString a = al.join(", ");
-            if (t != m_title || a != m_artist) {
-                m_title = t; m_artist = a;
+            QString art = map.value("mpris:artUrl").toString();
+            if (t != m_title || a != m_artist || art != m_artUrl) {
+                m_title = t; m_artist = a; m_artUrl = art;
                 emit metadataChanged();
             }
         }
@@ -99,6 +102,7 @@ private:
     QString  m_service;
     QString  m_title;
     QString  m_artist;
+    QString  m_artUrl;
     bool     m_playing = false;
     QTimer  *m_timer;
 };
