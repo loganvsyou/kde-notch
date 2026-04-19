@@ -4,26 +4,27 @@
 #include <QScreen>
 #include <LayerShellQt/Shell>
 #include <LayerShellQt/Window>
+#include "mpris.h"
 
 int main(int argc, char *argv[])
 {
-    // Must be called before QGuiApplication
-    LayerShellQt::Shell::useLayerShell();
-
     QGuiApplication app(argc, argv);
 
-    // Find the target screen (HDMI-A-1, the 2560-wide primary)
+    // Find HDMI-A-1 (2560-wide primary); fall back to primaryScreen
     QScreen *target = nullptr;
     for (QScreen *s : app.screens()) {
-        qDebug() << "Screen:" << s->name() << s->size() << s->geometry();
+        qDebug() << "Screen:" << s->name() << s->geometry();
         if (s->name() == "HDMI-A-1" || s->size().width() == 2560) {
             target = s;
         }
     }
     if (!target) target = app.primaryScreen();
 
+    MprisController mpris;
+
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("targetScreen", target);
+    engine.rootContext()->setContextProperty("mpris", &mpris);
     engine.load(QUrl::fromLocalFile(
         QString(SOURCE_DIR) + "/notch-window.qml"));
 
